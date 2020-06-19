@@ -3,17 +3,17 @@
     <Header>欢 迎 注 册</Header>
     <Content>
       <Form ref="formInline" :model="formInline" :rules="ruleInline">
-        <FormItem prop="user">
-          <Input type="text" v-model="formInline.username" placeholder="账户名">
-            <Icon type="ios-person-outline" size="20" slot="prepend"></Icon>
+        <FormItem prop="username">
+          <Input type="text" v-model="formInline.username" placeholder="账户">
+            <Icon type="ios-person-add-outline" size="20" slot="prepend"></Icon>
           </Input>
         </FormItem>
         <FormItem prop="password">
           <Input type="password" v-model="formInline.password" placeholder="密码">
-            <Icon type="ios-lock-outline" size="20" slot="prepend"></Icon>
+            <Icon type="ios-unlock-outline" size="20" slot="prepend"></Icon>
           </Input>
         </FormItem>
-        <FormItem prop="password">
+        <FormItem prop="rePassword">
           <Input type="password" v-model="formInline.rePassword" placeholder="确认密码">
             <Icon type="ios-lock-outline" size="20" slot="prepend"></Icon>
           </Input>
@@ -64,23 +64,48 @@ export default {
             message: "密码长度不能少于6位!",
             trigger: "blur"
           }
+        ],
+        rePassword: [
+          {
+            required: true,
+            message: "请填写确认密码!",
+            trigger: "blur"
+          },
+          {
+            type: "string",
+            min: 6,
+            message: "密码长度不能少于6位!",
+            trigger: "blur"
+          }
         ]
       }
     };
   },
   methods: {
     handleSubmit(name) {
-      this.$refs[name].validate(valid => {
-        console.log(valid);
+      this.$refs[name].validate(async valid => {
         if (valid) {
-          this.$Message.success("登录成功!");
+          try {
+            await this.$store
+              .dispatch("user/register", this.formInline)
+              .then(res => {
+                this.$Message.success("注册成功!");
+                if (200 == res.status && res.data.id) {
+                  this.$router.push({ path: "/login" });
+                }
+              });
+          } catch (err) {
+            const { message, errorDetails } = err.response.data;
+            this.$Message.error(message + errorDetails);
+          }
         } else {
-          this.$Message.error("登录失败!");
+          this.$Message.error("请正确填写注册信息!");
         }
       });
     },
+
     openLogin() {
-      this.$router.push({ path: "/login", query: { id: 666 } });
+      this.$router.push({ path: "/login" });
     }
   }
 };
@@ -101,12 +126,21 @@ export default {
     align-items: center;
     .ivu-form {
       padding: 50px;
-      width: 500px;
+      width: 400px;
       background: rgba($color: #fff, $alpha: 0.5);
       border-radius: 4px;
       border: 1px solid white;
-      .ivu-btn {
-        margin: auto 20px;
+      .ivu-form-item {
+        .ivu-icon {
+          color: #2d8cf0;
+          font-weight: bold;
+        }
+        .ivu-btn {
+          margin: auto 20px;
+        }
+      }
+      :last-child {
+        margin: 0;
       }
     }
   }

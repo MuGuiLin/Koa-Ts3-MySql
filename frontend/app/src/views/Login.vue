@@ -3,7 +3,7 @@
     <Header>欢 迎 登 录</Header>
     <Content>
       <Form ref="formInline" :model="formInline" :rules="ruleInline">
-        <FormItem prop="user">
+        <FormItem prop="username">
           <Input type="text" v-model="formInline.username" placeholder="账户">
             <Icon type="ios-person-outline" size="20" slot="prepend"></Icon>
           </Input>
@@ -52,43 +52,49 @@ export default {
             required: true,
             message: "请填写用户密码!",
             trigger: "blur"
-          },
-          {
-            type: "string",
-            min: 6,
-            message: "密码长度不能少于6位!",
-            trigger: "blur"
           }
+          // {
+          //   type: "string",
+          //   min: 6,
+          //   message: "密码长度不能少于6位!",
+          //   trigger: "blur"
+          // }
         ]
       }
     };
   },
   methods: {
     handleSubmit(name) {
-      // this.$refs[name].validate(valid => {
-      // console.log(valid);
-      // if (valid) {
-      axios({
-        method: "POST",
-        url: "/Api/user/login",
-        data: {
-          username: this.formInline.username,
-          password: this.formInline.password
+      this.$refs[name].validate(async valid => {
+        if (valid) {
+          // axios({
+          //   method: "POST",
+          //   url: "/user/login",
+          //   data: this.formInline
+          // })
+          //   .then(res => {
+          //     this.$Message.success("登录成功!");
+          //     this.$router.push({ path: "/" });
+          //   })
+          //   .catch(err => {
+          //     const { message, errorDetails } = err.response.data;
+          //     this.$Message.error(message + errorDetails);
+          //   });
+          try {
+            await this.$store
+              .dispatch("user/login", this.formInline)
+              .then(res => {
+                this.$Message.success("登录成功!");
+                this.$router.push({ name: "Home" });
+              });
+          } catch (err) {
+            const { message, errorDetails } = err.response.data;
+            this.$Message.error(message + errorDetails);
+          }
+        } else {
+          this.$Message.error("请正确填写登录信息!");
         }
-      })
-        .then(response => {
-          console.log(response);
-          this.$Message.success("登录成功!");
-        })
-        .catch(error => {
-          console.log(error);
-          this.$Message.error("登录失败!");
-        });
-
-      // } else {
-      //   this.$Message.error("登录失败!");
-      // }
-      // });
+      });
     },
     openRegist() {
       this.$router.push({ path: "/regist", query: { id: 666 } });
@@ -112,12 +118,21 @@ export default {
     align-items: center;
     .ivu-form {
       padding: 50px;
-      width: 500px;
+      width: 400px;
       background: rgba($color: #fff, $alpha: 0.5);
       border-radius: 4px;
       border: 1px solid white;
-      .ivu-btn {
-        margin: auto 20px;
+      .ivu-form-item {
+        .ivu-icon {
+          color: #2d8cf0;
+          font-weight: bold;
+        }
+        .ivu-btn {
+          margin: auto 20px;
+        }
+      }
+      :last-child {
+        margin: 0;
       }
     }
   }

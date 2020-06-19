@@ -18,21 +18,30 @@ const config: any = {
             host: "localhost",
             prot: 8080
         },
-        database: dbconfig.development as DbConfigType  //由于dbconfig是一个json格式没有类型，所以在这里用接口业做中转换，不然在app.ts中的 new Sequelize(Config.database) 会报错
+        database: dbconfig.development as DbConfigType,  //由于dbconfig是一个json格式没有类型，所以在这里用接口业做中转换，不然在app.ts中的 new Sequelize(Config.database) 会报错
+        jwt: {
+            verifyKey: 'mupiao'
+        }
     },
     test: {
         server: {
             host: "localhost",
             prot: 8086
         },
-        database: dbconfig.test as DbConfigType
+        database: dbconfig.test as DbConfigType,
+        jwt: {
+            verifyKey: 'mupiao'
+        }
     },
     production: {
         server: {
             host: "localhost",
             prot: 3306
         },
-        database: dbconfig.production as DbConfigType
+        database: dbconfig.production as DbConfigType,
+        jwt: {
+            verifyKey: 'mupiao'
+        }
     }
 };
 

@@ -133,6 +133,65 @@
     }
 ```
 
+* 6、在app.ts中配置、注册路由
+```js
+
+    import Koa, { Context } from 'koa';
+    import KoaRouter from "koa-router";
+    import KoaBodyParser from "koa-bodyparser";
+    import { bootstrapControllers } from "koa-ts-controllers";
+
+    (async () => {
+        const App = new Koa();
+        const Router = new KoaRouter();
+
+        // 路由、控制器、API管理（注：这里需要异步处理 await）
+        await bootstrapControllers(App, {
+            router: Router,                                         // 绑定路由模块 
+            basePath: '/api',                                       // 访问规则 localhost:8080/api/v2/控制器/接口
+            versions: {                                             // 版本号 
+                1: '此版本已弃用，不久将被删除！请尽快迁移到v2版本', // 可以同时开多个版本，这个是虽然能用，但是有警告信息
+                2: true,                                            // 正常访问
+                dangote: true                                       // 非常适合定制，业务客户端特定的端点版本
+            },
+            controllers: [                                          // 指定控制器类、接口存放目录，
+                __dirname + '/controllers/**/*.ts'                  // 可直接添加到此数组中，也可以添加全局字符串（匹配controllers目录下的所以文件分析类指定到路由对象中）
+            ],
+            errorHandler: async (err: any, ctx: Context) => {       // 统一错误处理程序(可选)
+                let status = 500;
+                let body: any = {
+                    statusCode: status,
+                    error: 'Internal Server Error',
+                    message: '后台数据库 或 控制器、Api接口发生错误！',
+                    errorDetails: '内部服务器错误！'
+                };
+                if (err && err.output) {                            // 如果控制器类、接口中有错抛出时的返回处理
+                    let {statusCode, payload} = err.output;
+                    status = statusCode;                            // HTTP状态代码(通常4 xx或5 xx)
+                    body = payload;
+                    if (err.data) {          
+                        body.errorDetails = err.data;               // 如果有错误详情时一并返回
+                    }
+                };
+                ctx.status = status;
+                ctx.body = body;
+            }
+        });
+
+        // 注册获取post参数模块
+        App.use(KoaBodyParser());
+
+        // 注册路由
+        App.use(Router.routes());
+
+        // 监听服务
+        App.listen(Config.server.prot, Config.server.host, () => {
+            console.log('服务启动成功：监听' + Config.server.host + ':' + Config.server.prot);
+        });
+
+    })();
+```
+
 
 
 
@@ -513,3 +572,123 @@
     // setMaxParserCache: [Function],
     // clearParserCache: [Function] }
 ```
+
+# 用户授权中间件 jwt JsonWebToken
+
+* 1、安装 jwt https://www.npmjs.com/package/jsonwebtoken
+
+```js
+
+    npm i jsonwebtoken
+    npm i -D @types/jsonwebtoken   //由于是用ts来做的项目，所以还要安装ts版的
+```
+
+* 2、在app.ts中 监听所有请求入口，并在koa中挂载(存储)前端调用API时传过来的token(一般情况下token是在登录时后端生成好传给前端的，前端存起来[这就是在前端判断用户是否登录的条件])，然后，在后端就可以根据在koa中挂载(存储)的token来对有请求入口 或 控制器（控制器中所有的接口） 或 单独的某个接口添访问权限。
+
+```js
+    // 监听所有路由请求入口
+    App.use(async (ctx, next) => {
+        ctx.set("Access-Control-Allow-Origin", "*");
+
+        // 获取前端从header中传过来的参数，
+        let token = ctx.headers['mupiao'];
+        console.log('token', ctx.headers.mupiao);
+
+        if (token) {
+            // 将传过来的参数挂载到ctx下
+            ctx.userInfo = jwt.verify(token, Config.jwt.verifyKey) as UserInfo;   // UserInfo是自定义挂载到koa中的一个对象（属性）
+        };
+        await next();
+
+        // if (404 == ctx.status) {
+        //     ctx.body = 404;
+        // }
+    });
+
+
+    // 注：由于在koa中的ctx下是没有UserInfo这个对象（属性）的，所以要在koa中去挂载。
+
+    // 新建一个以koa.extend.ts的文件，其内容如下：
+    import kao from 'koa'
+
+    /*
+    * koa 类型声明扩展
+    *
+    * 中koa中的ctx下挂载自定义对象{属性}: userInfo
+    */
+
+    interface UserInfo {
+        id: number;
+        name: string;
+    };
+
+    declare module 'koa' {
+
+        interface Context {
+            userInfo?: UserInfo
+        }
+    }
+
+
+
+
+    /*
+     * 由于在后端要根据在koa中挂载(存储)的token来对所有请求入口 或 控制器（控制器中所有的接口） 或 单独的某个接口添访问权限；
+     *
+     * 但是有一些接口如 用户登录、注册等API 是不需要访问权限的，如果对有请求入口 或 控制器设置访问权限的话不优雅；
+     * 
+     * 所以就把判断访问权限这个功能，做成一个中间件，哪个接口API需要添访问权限，就在哪个接口API上面通过@Flow([中间件1, 中间件2, ...]) 来注册中间件;
+     */
+
+
+    // 在src目录中新建一个middleware文件夹，专门用来存放自定义中间件的。
+    // 在middleware文件夹中新建mupiao.ts文件(名字可自定义)，用于判断用户是否有权限访问， 内容如下：
+    import koa, { Context, Next } from "koa";
+    import Boom from "@hapi/boom";
+
+    /**
+     * koa自定义中间件 用于判断API请求时是否登录
+     */
+    export default async function mupiao(ctx: Context, next: Next) {
+        if (!ctx.userInfo || 1 < ctx.userInfo.id) {
+            console.log(ctx.userInfo)
+            throw Boom.unauthorized('无权访问：你还想没登录就想来调用我API，你想多啦！');
+        } else {
+
+            await next();
+
+        }
+    };
+
+```
+
+* 3、在需要访问权限的接口API上面添加访问权限中间件
+```js
+
+    //实例如下：
+
+    // 要有权限才能访问，通过koa-ts-controllers模块中的 @Flow([mupiao, mupiao2, ...]) 来注册自定义中间件 在@Flow([])中还可以同时添加多个中间件
+
+    import { Controller, Get, Params, Query, Body, Post, Header, Flow } from "koa-ts-controllers";
+
+    // 自定义中间件
+    import mupiao from "../middleware/mupiao";
+
+
+    @Flow([mupiao])
+    @Get('/auth')
+    async Auth(@Query() par: any) {
+
+        return '<h1 style="color: red">没授权(登录)，就不让你访问！';
+
+    };
+
+    // 不用权限
+    @Get('/noauth')
+    async NoAuth() {
+
+        return '<h1 style="color: green">OK，我可以任意访问！';
+
+    };
+```
+

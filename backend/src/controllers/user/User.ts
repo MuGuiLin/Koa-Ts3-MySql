@@ -9,6 +9,12 @@ import Boom from "@hapi/boom";
 // Node加密模块
 import Crypto from "crypto";
 
+// 用户信息加密 token
+import jwt from "jsonwebtoken";
+
+// 配置信息
+import Config from "../../config";
+
 // 自定义API参数验证模块
 import { LoginBody, RegistBody } from "../../validators/user/User";
 
@@ -27,10 +33,9 @@ export class UserController {
     @Post('/login')
     public async Login(@Ctx() ctx: Context, @Body() body: LoginBody) {
 
-        console.log(body);
+        // console.log(body);
 
         let { username, password } = body;
-        
 
         const md5 = Crypto.createHash('md5');
         const user = await UserModel.findOne({
@@ -39,17 +44,34 @@ export class UserController {
 
         // console.log(user); // 查询到的数据
 
-        password = md5.update(password).digest('hex');
-   
-        if (password != user.password) {
-            throw Boom.forbidden('登录失败：', '用户不存在或密码错误！');
-        };
+        if (!user) {
+            throw Boom.notFound('登录失败：', '该用户不存在！');
+        }
 
-        ctx.status = 200;
-        return {
+        password = md5.update(password).digest('hex');
+
+        if (password != user.password) {
+            throw Boom.forbidden('登录失败：', '当前密码有误！');
+        }
+
+        // ctx.status = 201;
+        // return {
+        //     id: user.id,
+        //     username: user.username
+        // };
+
+        // 用jwt 生成token 从headers中返回前端(用于验证是否登录)，所有不能像上面直接返回！！
+        let userInfo = {
             id: user.id,
             username: user.username
         };
+
+        let token = jwt.sign(userInfo, Config.jwt.verifyKey);
+
+        ctx.set('token', token);
+        ctx.status = 201;
+
+        return userInfo;
     };
 
 
@@ -85,7 +107,7 @@ export class UserController {
         // 将UserModel表对象中的数据同步到数据库
         await newUser.save();
 
-        ctx.status = 200;
+        ctx.status = 201;
         return {
             id: newUser.id,
             name: newUser.username,
@@ -100,5 +122,19 @@ export class UserController {
     };
 
 
+    @Get('/info')
+    async getUserInfo(@Ctx() ctx: Context, @Query() par: any) {
+        console.log(par)
+
+        const user = await UserModel.findOne({ where: { id: par.id } });
+
+        // console.log(user);
+
+        ctx.status = 201;
+        return {
+            id: user.id,
+            data: user
+        }
+    };
 
 };
