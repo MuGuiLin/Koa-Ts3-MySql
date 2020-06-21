@@ -16,7 +16,7 @@ module.exports = {
           autoIncrement: true,        // 值自增
           primaryKey: true,           // 主键
         },
-        username: {
+        userName: {
           type: Sequelize.STRING(50), //字符串类型
           unique: true,               // 值唯一（不能重复）
           allowNull: false            // 不能为空
@@ -34,11 +34,11 @@ module.exports = {
           defaultValue: '0'
         },
         job: {
-          type: Sequelize.STRING(32),
+          type: Sequelize.STRING,
           allowNull: true
         },
         phone: {
-          type: Sequelize.STRING(11),
+          type: Sequelize.STRING,
           allowNull: true
         },
         wechat: {

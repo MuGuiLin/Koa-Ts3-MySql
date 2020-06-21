@@ -93,7 +93,7 @@ export class User extends Model<User> {
     @Column({
         type: DataType.TEXT
     })
-    summary: Text;
+    summary: string;
 
 
     @CreatedAt

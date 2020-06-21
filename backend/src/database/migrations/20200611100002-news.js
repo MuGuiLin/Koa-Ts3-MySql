@@ -16,29 +16,70 @@ module.exports = {
           autoIncrement: true,          // 值自增
           primaryKey: true,             // 主键
         },
-        type: {
-          type: Sequelize.STRING(60),
-          allowNull: true             
-        },
-        title: {
-          type: Sequelize.STRING(120), //字符串类型
-          unique: true,                // 值唯一（不能重复）
-          allowNull: false             // 不能为空
-        },
-        author: {
-          type: Sequelize.CHAR(32),   
-          allowNull: true            
-        },
-        content: {
-          type: Sequelize.TEXT,       //文本类型
+
+        userId: {
+          type: Sequelize.INTEGER,
           allowNull: false
         },
-        readsum: {
-          type: Sequelize.INTEGER,    //整数类型
-          defaultValue: 0             //默认值
+
+        typeId: {
+          type: Sequelize.INTEGER,
+          allowNull: false
         },
+
+        reviewId: {
+          type: Sequelize.INTEGER,
+          allowNull: false
+        },
+
+        title: {
+          type: Sequelize.STRING,
+          unique: true,
+          allowNull: false
+        },
+
+        author: {
+          type: Sequelize.CHAR(60),
+          allowNull: true
+        },
+
+        content: {
+          type: Sequelize.TEXT,
+          allowNull: true
+        },
+
+        cover: {
+          type: Sequelize.STRING,
+          allowNull: true
+        },
+
+        summary: {
+          type: Sequelize.STRING,
+          allowNull: true
+        },
+
+        keyword: {
+          type: Sequelize.STRING,
+          allowNull: true
+        },
+
+        link: {
+          type: Sequelize.STRING,
+          allowNull: true
+        },
+
+        readSum: {
+          type: Sequelize.INTEGER,
+          allowNull: true
+        },
+
+        likeSum: {
+          type: Sequelize.INTEGER,
+          allowNull: true
+        },
+
         createdAt: {
-          type: Sequelize.DATE,       //日期类型
+          type: Sequelize.DATE,
           allowNull: false
         },
         updatedAt: {

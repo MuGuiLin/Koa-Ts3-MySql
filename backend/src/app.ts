@@ -22,17 +22,17 @@ import Config from './config'
     // console.log(db);
 
 
-    // 监听所有路由入口
+    // 监听所有路由入口 所有请求拦截器
     App.use(async (ctx, next) => {
         ctx.set("Access-Control-Allow-Origin", "*");
-
+        
         // 获取前端从header中传过来的参数，
-        let token = ctx.headers['mupiao'];
-        // console.log('token', ctx.headers.mupiao);
+        let token = ctx.headers[Config.jwt.verifyKey];
 
         if (token) {
-            // 将传过来的参数挂载到ctx下
+            // 将传过来的参数挂载到ctx下，jwt.verify(token, Config.jwt.verifyKey) 校验在login接口中设置的 jwt.sign(userInfo, Config.jwt.verifyKey) 是否相等;
             ctx.userInfo = jwt.verify(token, Config.jwt.verifyKey) as UserInfo;   // UserInfo是自定义挂载到koa中的一个对象（属性）
+
         };
         await next();
 
@@ -70,7 +70,7 @@ import Config from './config'
             };
             if (err && err.output) {                            // 如果控制器类、接口中有错抛出时的返回处理
                 let {statusCode, payload} = err.output;
-                status = statusCode;                            // HTTP状态代码(通常4 xx或5 xx)
+                status = statusCode || 200;                     // HTTP状态代码(通常4 xx或5 xx)
                 body = payload;
                 if (err.data) {          
                     body.errorDetails = err.data;               // 如果有错误详情时一并返回

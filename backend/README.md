@@ -591,8 +591,8 @@
         ctx.set("Access-Control-Allow-Origin", "*");
 
         // 获取前端从header中传过来的参数，
-        let token = ctx.headers['mupiao'];
-        console.log('token', ctx.headers.mupiao);
+        let token = ctx.headers[Config.jwt.verifyKey];
+        console.log('token', ctx.headers.Config.jwt.verifyKey);
 
         if (token) {
             // 将传过来的参数挂载到ctx下
@@ -642,14 +642,14 @@
 
 
     // 在src目录中新建一个middleware文件夹，专门用来存放自定义中间件的。
-    // 在middleware文件夹中新建mupiao.ts文件(名字可自定义)，用于判断用户是否有权限访问， 内容如下：
+    // 在middleware文件夹中新建Authentication.ts文件(名字可自定义)，用于判断用户是否有权限访问， 内容如下：
     import koa, { Context, Next } from "koa";
     import Boom from "@hapi/boom";
 
     /**
      * koa自定义中间件 用于判断API请求时是否登录
      */
-    export default async function mupiao(ctx: Context, next: Next) {
+    export default async function userAuthentication(ctx: Context, next: Next) {
         if (!ctx.userInfo || 1 < ctx.userInfo.id) {
             console.log(ctx.userInfo)
             throw Boom.unauthorized('无权访问：你还想没登录就想来调用我API，你想多啦！');
@@ -667,15 +667,15 @@
 
     //实例如下：
 
-    // 要有权限才能访问，通过koa-ts-controllers模块中的 @Flow([mupiao, mupiao2, ...]) 来注册自定义中间件 在@Flow([])中还可以同时添加多个中间件
+    // 要有权限才能访问，通过koa-ts-controllers模块中的 @Flow([authen, authen, ...]) 来注册自定义中间件 在@Flow([])中还可以同时添加多个中间件
 
     import { Controller, Get, Params, Query, Body, Post, Header, Flow } from "koa-ts-controllers";
 
     // 自定义中间件
-    import mupiao from "../middleware/mupiao";
+    import authen from "../middleware/userAuthentication";
 
 
-    @Flow([mupiao])
+    @Flow([authen])
     @Get('/auth')
     async Auth(@Query() par: any) {
 

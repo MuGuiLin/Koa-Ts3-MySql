@@ -20,7 +20,7 @@ const config: any = {
         },
         database: dbconfig.development as DbConfigType,  //由于dbconfig是一个json格式没有类型，所以在这里用接口业做中转换，不然在app.ts中的 new Sequelize(Config.database) 会报错
         jwt: {
-            verifyKey: 'mupiao'
+            verifyKey: 'mupiao-token'
         }
     },
     test: {
@@ -30,7 +30,7 @@ const config: any = {
         },
         database: dbconfig.test as DbConfigType,
         jwt: {
-            verifyKey: 'mupiao'
+            verifyKey: 'mupiao-token'
         }
     },
     production: {
@@ -40,7 +40,7 @@ const config: any = {
         },
         database: dbconfig.production as DbConfigType,
         jwt: {
-            verifyKey: 'mupiao'
+            verifyKey: 'mupiao-token'
         }
     }
 };
@@ -53,7 +53,6 @@ type configKey = keyof typeof config;   // 用 keyof 来取对象的第一层key
 // Node环境变量(process对象下的env属性 用于在Node环境下读取环境变量信息【后面的NODE_EVN是可以自定义的】)
 const NODE_EVN: string | number | symbol = process.env.NODE_EVN as configKey || 'development';
 
-console.log(NODE_EVN)
 // process报错：由于默认在ts环境中没有继承Node环境的相关API 所以要调用Node.js环境下的process对象需要安装第三方库 npm i -D @types/node
 
 export default config[NODE_EVN];

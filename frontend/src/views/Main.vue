@@ -1,19 +1,24 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-
-    <h3>{{res}}</h3>
-  </div>
+  <Layout>
+    <Header></Header>
+    <Content>
+      <router-view />
+    </Content>
+    <Footer></Footer>
+  </Layout>
 </template>
 
 <script>
 // @ is an alias to /src
+import Header from "@/components/Header.vue";
+import Footer from "@/components/Footer.vue";
 import HelloWorld from "@/components/HelloWorld.vue";
 
 export default {
-  name: "Home",
+  name: "Main",
   components: {
+    Header,
+    Footer,
     HelloWorld
   },
   data() {
@@ -22,7 +27,7 @@ export default {
     };
   },
   mounted() {
-    this.getUserInfo();
+
   },
   methods: {
     async getUserInfo() {
@@ -36,7 +41,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h3{
+.ivu-layout {
+  .ivu-layout-content {
+    min-height: 90vh;
+  }
+}
+
+h3 {
   font-size: 18px;
   text-align: left;
   line-height: 36px;

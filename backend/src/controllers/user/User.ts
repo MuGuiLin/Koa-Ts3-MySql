@@ -1,7 +1,7 @@
 import { Context } from "koa";
 
 // ORM模块 
-import { Controller, Header, Ctx, Get, Params, Query, Post, Body } from "koa-ts-controllers";
+import { Controller, Header, Ctx, Get, Params, Query, Post, Body, Flow } from "koa-ts-controllers";
 
 // 错误处理模块
 import Boom from "@hapi/boom";
@@ -20,6 +20,8 @@ import { LoginBody, RegistBody } from "../../validators/user/User";
 
 // 用户表信息映射模型
 import { User as UserModel } from "../../models/user/User";
+
+import authen from "../../middleware/Authentication";
 
 // 用户API控制器
 @Controller('/user')
@@ -66,7 +68,7 @@ export class UserController {
             username: user.username
         };
 
-        let token = jwt.sign(userInfo, Config.jwt.verifyKey);
+        let token = jwt.sign(userInfo, Config.jwt.verifyKey);   // Config.jwt.verifyKey === mupiao-token 在这里生效
 
         ctx.set('token', token);
         ctx.status = 201;
@@ -84,8 +86,9 @@ export class UserController {
      * }
      */
     @Post('/regist')
-    async Regist(@Ctx() ctx: Context, @Body() body: RegistBody) {
-        console.log(body);
+    public async Regist(@Ctx() ctx: Context, @Body() body: RegistBody) {
+        // console.log(body);
+        
         let { username, password } = body;
 
         const md5 = Crypto.createHash('md5');
@@ -121,10 +124,10 @@ export class UserController {
         // instance.update();
     };
 
-
+    @Flow([authen]) // 用户需要登录才能访问该API (在请求时在请求头Request Headers中把token带过来(可以在axios拦截器中给所有请求的加上))
     @Get('/info')
     async getUserInfo(@Ctx() ctx: Context, @Query() par: any) {
-        console.log(par)
+        // console.log(par);
 
         const user = await UserModel.findOne({ where: { id: par.id } });
 

@@ -7,7 +7,7 @@ import { IsNumberString, IsNumber, IsString } from "class-validator";
 import Boom from "@hapi/boom";    // https://hapi.dev/module/boom 
 
 // 自定义中间件
-import mupiao from "../middleware/mupiao";
+import authen from "../middleware/Authentication";
 
 // users Api接品参数类型验证类（当然这个类型验证可以在外部做成一个模块导来哦）
 class UserQuery {
@@ -43,7 +43,7 @@ export class TestClass {
 
 
     // hello方法名(也就是Api接口名) 方法装饰器 注: 这是名字就是方法(Api接口的名字哦), 而下面的方法名可以任意写(不能与其他字名重得就OK) 所以一般装饰器名和方法都名一样
-    // @Flow([mupiao])
+    // @Flow([Authority])
     @Get('/hello')
     // 请示地址：http://localhost:8080/api/v2/test/hello
     async hello(@Header() head: any) {
@@ -191,8 +191,8 @@ export class TestClass {
      * 
      */
 
-    // 要有权限才能访问，通过koa-ts-controllers模块中的 @Flow([mupiao, mupiao2, ...]) 来注册自定义中间件 在@Flow([])中还可以同时添加多个中间件
-    @Flow([mupiao])
+    // 要有权限才能访问，通过koa-ts-controllers模块中的 @Flow([authen, authen, ...]) 来注册自定义中间件 在@Flow([])中还可以同时添加多个中间件
+    @Flow([authen])
     @Get('/auth')
     async Auth() {
         // console.log(a.b)
