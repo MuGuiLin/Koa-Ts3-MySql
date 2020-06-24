@@ -94,13 +94,12 @@
 
 * 4、在src目录下创建controllers目录，用于存放控制器和方法、Api接口
 
-要获取 post方式传过来的参数，还需要如 koa-bodyparser 等可以接收post参数的模块
+要获取 post方式传过来的参数，还需要如 koa-body 等可以接收post参数的模块
+注册接收post参数、上传二进制文件等模块
 ```js
-    npm i -D koa-bodyparser
+    npm i koa-body
 
-    npm i -D @types/koa-bodyparser //类型声明
-
-    //然后在 koa-bodyparser 在app.ts文件中引入，并注册到app.use()中，如：App.use(KoaBodyParser());
+    //然后在 koa-body 在app.ts文件中引入，并注册到app.use()中，如：App.use(KoaBody());
 ```
 
 * 5、编写API接口，controllers目录新建相应的.ts接口文件
@@ -690,5 +689,33 @@
         return '<h1 style="color: green">OK，我可以任意访问！';
 
     };
+```
+
+
+
+
+# 静态资源管理
+
+* 1、安装静态资源管理中间件 koa-static-cache
+```js
+
+    npm i koa-static-cache
+
+    npm i -D @types/koa-static-cache
+
+
+    // 安装好后，在app.ts中引用模块并配置好路径
+
+    import KoaStatic from "koa-static-cache";
+
+    App.use(KoaStatic({
+        dir: './uploads',   // 静态资源存储路径(以src为根目录)
+        prefix: '/mupiao',  // 静态资源访问前缀(名字自定义，前面一定要加/)
+        gzip: true,         // 是否启用压缩
+        dynamic: true       // 是否启用缓存 
+    }));
+
+    // 如：访问图片时 localhost:8080/mupiao/abc.jpg  其他类型文件也一样
+
 ```
 

@@ -85,7 +85,8 @@ export default {
               .dispatch("user/login", this.formInline)
               .then(res => {
                 this.$Message.success("登录成功!");
-                this.$router.push({ name: "Home" });
+                // this.$router.push({ name: "Home" });
+                this.$router.push({ path: "/" });
               });
           } catch (err) {
             const { message, errorDetails } = err.response.data;
@@ -112,7 +113,7 @@ export default {
     color: white;
   }
   .ivu-layout-content {
-    height: 80vh;
+    height: 85vh;
     display: flex;
     justify-content: center;
     align-items: center;

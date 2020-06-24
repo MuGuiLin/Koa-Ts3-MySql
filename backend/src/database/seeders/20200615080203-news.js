@@ -23,7 +23,6 @@ module.exports = {
         id: index + 1,
         userId: 2,
         typeId: parseInt((Math.random() + 0.5) * 25),
-        reviewId: 1,
         title: '欧洲富裕小国，闷声发大财的典范，国民收入重要来源你肯定想不到',
         author: '沐枫',
         content: `<p class="one-p" style="margin-top: 0px; margin-bottom: 2em; padding: 0px; line-height: 2.2; overflow-wrap: break-word; font-family: &quot;Microsoft Yahei&quot;, Avenir, &quot;Segoe UI&quot;, &quot;Hiragino Sans GB&quot;, STHeiti, &quot;Microsoft Sans Serif&quot;, &quot;WenQuanYi Micro Hei&quot;, sans-serif; font-size: 18px; white-space: normal;">

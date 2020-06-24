@@ -121,7 +121,7 @@ export default {
     color: white;
   }
   .ivu-layout-content {
-    height: 80vh;
+    height: 85vh;
     display: flex;
     justify-content: center;
     align-items: center;

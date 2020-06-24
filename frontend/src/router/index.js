@@ -6,6 +6,8 @@ import Main from '../views/Main.vue'
 const Login = () => import(/* webpackChunkName: "Login" */ '../views/Login.vue');
 const Regist = () => import(/* webpackChunkName: "Regist" */ '../views/Regist.vue');
 const News = () => import(/* webpackChunkName: "News" */ '../views/News.vue');
+const Info = () => import(/* webpackChunkName: "Info" */ '../views/Info.vue');
+const Send = () => import(/* webpackChunkName: "Send" */ '../views/Send.vue');
 const Card = () => import(/* webpackChunkName: "Card" */ '../views/Card.vue');
 const NotFound = () => import(/* webpackChunkName: "NotFound" */ '../views/NotFound.vue');
 
@@ -35,17 +37,22 @@ const routes = [
           }
         ]
       },
-      // {
-      //   path: '/about',
-      //   name: 'About',
-      //   meta: {
-      //     userauth: true
-      //   },
-      //   // route level code-splitting
-      //   // this generates a separate chunk (about.[hash].js) for this route
-      //   // which is lazy-loaded when the route is visited.
-      //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-      // },
+      {
+        path: '/info/:id(\\d+)',
+        name: 'Info',
+        meta: {
+          userauth: true
+        },
+        component: Info
+      },
+      {
+        path: '/send',
+        name: 'Send',
+        meta: {
+          userauth: true
+        },
+        component: Send
+      },
       {
         path: '',
         name: 'News',

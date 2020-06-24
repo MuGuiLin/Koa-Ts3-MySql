@@ -14,6 +14,7 @@ import kao from 'koa'
 declare module 'koa' {
 
     interface Context {
-        userInfo?: UserInfo
+        // userInfo?: UserInfo
+        userInfo: UserInfo
     }
 }

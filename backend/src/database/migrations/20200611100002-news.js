@@ -18,22 +18,17 @@ module.exports = {
         },
 
         userId: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.INTEGER.UNSIGNED,
           allowNull: false
         },
 
         typeId: {
-          type: Sequelize.INTEGER,
-          allowNull: false
-        },
-
-        reviewId: {
-          type: Sequelize.INTEGER,
+          type: Sequelize.INTEGER.UNSIGNED,
           allowNull: false
         },
 
         title: {
-          type: Sequelize.STRING,
+          type: Sequelize.STRING(128),
           unique: true,
           allowNull: false
         },

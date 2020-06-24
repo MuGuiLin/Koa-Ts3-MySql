@@ -13,11 +13,11 @@ axios.interceptors.request.use((req) => {
          * 所以在这里（请求拦截器 所有的请求都会经过这里）设置后就所有的请求都有了。
          */
         let user = JSON.parse(localStorage.getItem('user-info'));
-        if(user.token) {
+        if (user.token) {
             req.headers.common['mupiao-token'] = user.token;  // 注：mupiao-token 是根据后端接收时自定义设置的key名(一般写在配置文件中)
         }
     } catch (err) {
-        
+
     }
     return req;
 })
@@ -27,7 +27,7 @@ axios.interceptors.response.use((res) => {
     return res;
 }, (err) => {
     // console.dir(err.response);
-    
+
     const { message, errorDetails = '' } = err.response.data;
     console.error(message + errorDetails);
 
@@ -42,7 +42,6 @@ export const register = (data) => {
         data
     });
 };
-
 
 // 用户登录API
 export const login = (data) => {
@@ -59,5 +58,37 @@ export const getUserInfo = (data) => {
         method: 'GET',
         url: '/user/info',
         params: data
+    });
+};
+
+// 获取单条新闻
+export const getOneNews = (data) => {
+    return axios({
+        url: '/news/' + data.id,
+    });
+};
+
+// 获取所有新闻
+export const getAllNews = () => {
+    return axios({
+        method: 'GET',
+        url: '/news'
+    });
+};
+
+// 获取所有新闻
+export const getNewsType = () => {
+    return axios({
+        method: 'GET',
+        url: '/newsType'
+    });
+};
+
+// 新增所有新闻
+export const addNews = (data) => {
+    return axios({
+        method: 'POST',
+        url: '/news/add',
+        data
     });
 };

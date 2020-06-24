@@ -15,19 +15,19 @@ export class Review extends Model<Review> {
     })
     id: number;
 
-    @ForeignKey(() => User) // 外键表
+    @ForeignKey(() => User) // 外键User表
     @Column({
         type: DataType.INTEGER.UNSIGNED,
         allowNull: false
     })
-    userId: string;
+    userId: number;
 
-    @ForeignKey(() => News) // 外键表
+    @ForeignKey(() => News) // 外键News表
     @Column({
         type: DataType.INTEGER.UNSIGNED,
         allowNull: false
     })
-    newsId: string;
+    newsId: number;
 
     @Column({
         type: DataType.STRING(11),

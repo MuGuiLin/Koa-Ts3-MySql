@@ -22,7 +22,7 @@ export default {
         // 用户登录后更新 并 持久化用户信息
         updateUserInfo: (state, data) => {
             state.userinfo = data;
-            
+
             // 为了在用户已登录的情况下，刷新页面后还能获取到用户信息
             localStorage.setItem('user-info', JSON.stringify(data));
         }
@@ -38,22 +38,22 @@ export default {
                     name: res.data.username,
                     token: res.headers.token,
                     headers: res.headers
-                })
+                });
 
                 return res
             } catch (error) {
 
-                throw error
+                throw error;
             }
         },
 
         register: ({ }, data) => {
 
             // 调用api中的register接口
-            return register(data)
+            return register(data);
         },
 
-        userinfo: ({}, data) => {
+        userinfo: ({ }, data) => {
 
             return getUserInfo(data);
         }

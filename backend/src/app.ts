@@ -1,6 +1,7 @@
 import Koa, { Context } from 'koa';
+import KoaBody from "koa-body";
 import KoaRouter from "koa-router";
-import KoaBodyParser from "koa-bodyparser";
+import KoaStatic from "koa-static-cache";
 import { bootstrapControllers } from "koa-ts-controllers";
 import { Sequelize } from "sequelize-typescript";
 import jwt from "jsonwebtoken";
@@ -11,6 +12,13 @@ import Config from './config'
     const App = new Koa();
     const Router = new KoaRouter();
 
+    // 静态资源代理
+    App.use(KoaStatic({
+        dir: Config.storage.dir,        // 静态资源存储路径(以src为根目录)
+        prefix: Config.storage.prefix,  // 静态资源访问前缀(名字自定义，前面一定要加/)
+        gzip: true,                     // 是否启用压缩
+        dynamic: true                   // 是否启用缓存 
+    }));
 
     // 链接数据库
     const db = new Sequelize({
@@ -25,7 +33,7 @@ import Config from './config'
     // 监听所有路由入口 所有请求拦截器
     App.use(async (ctx, next) => {
         ctx.set("Access-Control-Allow-Origin", "*");
-        
+
         // 获取前端从header中传过来的参数，
         let token = ctx.headers[Config.jwt.verifyKey];
 
@@ -65,14 +73,14 @@ import Config from './config'
             let body: any = {
                 statusCode: status,
                 error: 'Internal Server Error',
-                message: '后台数据库 或 控制器、Api接口发生错误！',
+                message: '后台数据库未启动 或 控制器、Api接口内部发生错误！',
                 errorDetails: '内部服务器错误！'
             };
             if (err && err.output) {                            // 如果控制器类、接口中有错抛出时的返回处理
-                let {statusCode, payload} = err.output;
+                let { statusCode, payload } = err.output;
                 status = statusCode || 200;                     // HTTP状态代码(通常4 xx或5 xx)
                 body = payload;
-                if (err.data) {          
+                if (err.data) {
                     body.errorDetails = err.data;               // 如果有错误详情时一并返回
                 }
             };
@@ -88,8 +96,21 @@ import Config from './config'
     // });
 
 
-    // 注册获取post参数模块
-    App.use(KoaBodyParser());
+    // 注册接收post参数、上传二进制文件等模块
+    App.use(KoaBody({
+        multipart: true,                    // 开启上传二进制文件处理
+        formidable: {
+            maxFields: 100,                 // 上传最大文件个数（整数）
+            maxFieldsSize: 10,              // 上传最大文件大小（整数） 1MB = (1 * 1024 * 1024)
+            uploadDir: Config.storage.dir,  // 文件上传目录,默认os.tmpDir(),
+            keepExtensions: true,           // 开启文件写入uploadDir包括原始文件的扩展名, 默认false
+            hash: 'md5',                    // 如果你想计算校验和传入的文件, 设置这个要么'sha1'或'md5'、默认false
+            multiples: true,                 // 开启多文件上传
+            onFileBegin: (name?: any, file?: any) => {
+                // console.log(name, file);
+            }
+        }
+    }));
 
 
     // 注册路由

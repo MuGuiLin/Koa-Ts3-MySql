@@ -1,4 +1,6 @@
+import path from "path";
 import dbconfig from "./dbconfig.json";
+
 
 // 定义数据库配置类型接口 用于规范dbconfig.json中的数据类型
 interface DbConfigType {
@@ -20,7 +22,11 @@ const config: any = {
         },
         database: dbconfig.development as DbConfigType,  //由于dbconfig是一个json格式没有类型，所以在这里用接口业做中转换，不然在app.ts中的 new Sequelize(Config.database) 会报错
         jwt: {
-            verifyKey: 'mupiao-token'
+            verifyKey: 'mupiao-token'   // 用户登录鉴权名
+        },
+        storage: {
+            dir: path.resolve(__dirname, '../uploads'),  // 静态资源存储路径(以src为根目录)
+            prefix: '/mupiao'   // 静态资源访问前缀(名字自定义，前面一定要加/)
         }
     },
     test: {

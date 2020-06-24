@@ -6,6 +6,11 @@
           <Icon type="ios-paper" />新闻中心
         </router-link>
       </MenuItem>
+      <MenuItem name="1">
+        <router-link to="/send">
+          <Icon type="ios-send" />新闻发布
+        </router-link>
+      </MenuItem>
       <MenuItem name="2">
         <router-link to="/about">
           <Icon type="ios-people" />关于我们
@@ -48,7 +53,9 @@
           <Icon type="md-share" />分享本站
         </DropdownItem>
         <DropdownItem divided>
-          <Icon type="md-power" />退出登录
+          <a href="javascript:0;" @click="quitLogin()">
+            <Icon type="md-power" />退出登录
+          </a>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>
@@ -57,7 +64,25 @@
 
 <script>
 export default {
-  name: "Header"
+  name: "Header",
+  data() {
+    return {};
+  },
+  methods: {
+    quitLogin() {
+      this.$Modal.confirm({
+        title: "退出登录：",
+        content: "<p>您即将退出本系统是否确认退出？</p>",
+        onOk: () => {
+          window.localStorage.clear();
+          window.location.reload();
+        },
+        onCancel: () => {
+          this.$Message.info("明智的选择！");
+        }
+      });
+    }
+  }
 };
 </script>
 
@@ -67,19 +92,23 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 0 30px;
-  background: #515a6e;
+  background: #593698;
   .ivu-menu {
+    background: #593698;
+
     .ivu-menu-item {
       a {
         display: block;
+        padding: 0 20px;
         color: white;
         font-size: 15px;
-        i{
-           font-size: 16px;
+        i {
+          font-size: 18px;
         }
       }
       a.router-link-exact-active {
-        color: #42b983;
+        color: #2d8cf0;
+        background: white;
         font-weight: 500;
       }
     }

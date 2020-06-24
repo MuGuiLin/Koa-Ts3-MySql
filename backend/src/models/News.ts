@@ -16,26 +16,19 @@ export class News extends Model<News> {
     })
     id: number;
 
-    @ForeignKey(() => User) // 外键表
+    @ForeignKey(() => User) // 外键User表
     @Column({
         type: DataType.INTEGER.UNSIGNED,
         allowNull: false // 不能为空
     })
     userId: number;
 
-    @ForeignKey(() => NewsType) // 外键表
+    @ForeignKey(() => NewsType) // 外键NewsType表
     @Column({
-        type: DataType.INTEGER,
+        type: DataType.INTEGER.UNSIGNED,
         allowNull: false // 不能为空
     })
-    typeId: string;
-
-    @ForeignKey(() => Review)
-    @AllowNull(false)   // 不能为空
-    @Column({
-        type: DataType.INTEGER
-    })
-    reviewId: string;
+    typeId: number;
 
     @Unique(true)       // 值唯一（不能重复）
     @Column({
