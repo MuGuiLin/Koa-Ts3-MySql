@@ -62,9 +62,9 @@ export default {
 
   methods: {
     compSrc(src) {
-      return "http" == src.slice(0, 4)
-        ? src
-        : this.$store.state.server.staticHost + src;
+      if(src) {
+        return "http" == src.slice(0, 4) ? src : this.$store.state.server.staticHost + src;
+      }
     },
 
     dragDown(e) {

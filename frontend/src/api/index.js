@@ -32,6 +32,7 @@ axios.interceptors.response.use((res) => {
     console.error(message + errorDetails);
 
     throw err; // 抛出错误
+    // return err;
 });
 
 // 用户注册API

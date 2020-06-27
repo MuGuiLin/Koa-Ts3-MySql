@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+import userInfo from "./plugins/userInfo";
 import user from "./modules/user"
 import news from "./modules/news";
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
       staticHost: process.env.VUE_APP_SERVER_STATIC_HOST
     }
   },
+  plugins: [userInfo],
   mutations: {
 
   },

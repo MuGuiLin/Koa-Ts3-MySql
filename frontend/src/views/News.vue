@@ -20,7 +20,7 @@
 
 <script>
 // @ is an alias to /src
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import dateFormat from "@/filters/dateTime";
 import CardList from "@/components/CardList";
 
@@ -40,11 +40,17 @@ export default {
   },
 
   computed: {
+    ...mapState('news', ['newsType', 'newsArr']),
+
+    // 起别名
     ...mapState("news", {
-      list: state => state.newsArr
+      list: state => state.newsArr,
+      type: o  => o.newsType
     })
   },
   mounted() {
+    console.log('和store中的名字一样',this.newsType,  this.newsArr);
+    console.log('起别名', this.type,  this.list);
     if (!this.list) {
       this.$store.dispatch("news/getAll");
     }

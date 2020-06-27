@@ -93,9 +93,12 @@ export default {
                 if (200 == res.status && res.data.id) {
                   this.$router.push({ path: "/login" });
                 }
-              });
+              })
+              // .catch(err => {
+              //   console.error('catch', err)
+              // });
           } catch (err) {
-            console.log(err)
+            console.error('err', err)
             const { message, errorDetails } = err.response.data;
             this.$Message.error(message + errorDetails);
           }

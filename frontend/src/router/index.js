@@ -101,7 +101,7 @@ const router = new VueRouter({
 })
 
 // 查看本地存储中是否有用户信息
-Store.commit('user/selectUserInfo');
+// Store.commit('user/selectUserInfo');  // 注：这里的逻辑改写到plugins插件中的
 
 router.beforeEach((to, from, next) => {
 
