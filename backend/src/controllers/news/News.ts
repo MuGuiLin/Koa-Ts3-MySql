@@ -4,11 +4,11 @@ import Boom from "@hapi/boom";
 
 import { Controller, Flow, Get, Post, Put, Delete, Ctx, Params, Body } from "koa-ts-controllers";
 
-import { News as NewsModel } from "../models/News";
+import { News as NewsModel } from "../../models/news/News";
 
-import authen from "../middleware/Authentication";
+import authen from "../../middleware/Authentication";
 
-import { PostAddNews, PutEditNews } from "../validators/News";
+import { PostAddNews, PutEditNews } from "../../validators/news/News";
 
 
 @Flow([authen])  // 该控制器下面的所有API都需要鉴权
@@ -67,8 +67,11 @@ export class NewsController {
         if (news.userId !== ctx.userInfo.id) {
             throw Boom.forbidden('这条新闻不属性于你！');
         };
+        
+        // 访问量统计（每请求1次就加1次）
+        news.readSum = news.readSum + 1;
 
-        // let news = await this.AccessAuthority(ctx, id);
+        await news.save();
 
         ctx.status = 200;
         return news;

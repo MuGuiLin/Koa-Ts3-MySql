@@ -1,7 +1,6 @@
 import { Model, Table, PrimaryKey, AutoIncrement, Column, AllowNull, Unique, DataType, UpdatedAt, CreatedAt, ForeignKey } from "sequelize-typescript";
-import { User } from "./user/User";
+import { User } from "../user/User";
 import { NewsType } from "./NewsType";
-import { Review } from "./Review";
 
 @Table({
     tableName: 'News'

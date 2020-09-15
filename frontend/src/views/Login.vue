@@ -67,20 +67,24 @@ export default {
   computed: {
     // 映射 store里面 state 中的变量
     // ...mapState('user', ['userinfo']) 只要1个时
-    ...mapState('user', ['userinfo', 'logout'])  // 多个时
+    ...mapState("user", ["userinfo", "logout"]) // 多个时
 
     // 通过 mapState, mapMutations, mapActions 的映射，可以减少直接对this.$store.xxx的访问
   },
   mounted() {
-
-    console.log('------', this.$store.state.user.userinfo, this.$store.state.user.logout);
+    window.mupiao = "沐枫";
+    console.log(
+      "------",
+      this.$store.state.user.userinfo,
+      this.$store.state.user.logout
+    );
 
     // 这是对上面代码的简化：用mapState映射后，就可以更方便的获取store中的状态了
-    console.log('------',this.userinfo, this.logout);
+    console.log("------", this.userinfo, this.logout);
   },
   methods: {
     // 映射 store里面 actions 中的方法
-    ...mapActions(['user/login', 'user/userinfo']),
+    ...mapActions(["user/login", "user/userinfo"]),
 
     handleSubmit(name) {
       this.$refs[name].validate(async valid => {
@@ -101,12 +105,13 @@ export default {
           try {
             // await this.$store.dispatch("user/login", this.formInline)
 
-            await this['user/login'](this.formInline) // 用mapActions() 来做映射，就可以简化 this.$store.dispatch("user/login", this.formInline)
+            await this["user/login"](this.formInline) // 用mapActions() 来做映射，就可以简化 this.$store.dispatch("user/login", this.formInline)
               .then(res => {
                 this.$Message.success("登录成功!");
                 // this.$router.push({ name: "Home" });
-                this.getUserInfo();
+
                 this.$router.push({ path: "/" });
+                // this.$router.push(this.$route.query.redirect);
               });
           } catch (err) {
             const { message, errorDetails } = err.response.data;
@@ -120,12 +125,12 @@ export default {
     async getUserInfo() {
       try {
         // await this.$store.dispatch("user/userinfo", { id: 3 }).then(res => {
-        await this['user/userinfo']({id: 2}).then(res => {
+        await this["user/userinfo"]({ id: 2 }).then(res => {
           console.log(res);
         });
       } catch (err) {
         console.error(err);
-      };
+      }
     },
     openRegist() {
       this.$router.push({ path: "/regist", query: { id: 666 } });

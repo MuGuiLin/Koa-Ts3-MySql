@@ -21,6 +21,14 @@ export default {
       res: {}
     };
   },
+  // 注：只有设置了<keep-alive></keep-alive> 才有效
+  activated() {
+    console.log("keep-alive 进入视图钩子，1、activated");
+  },
+  // 注：只有设置了<keep-alive></keep-alive> 才有效
+  deactivated() {
+    console.log("keep-alive 离开视图钩子，2、deactivated");
+  },
   mounted() {
     this.getUserInfo();
   },
@@ -36,7 +44,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  h2 {
-    text-align: left;
-  }
+h2 {
+  text-align: left;
+}
 </style>

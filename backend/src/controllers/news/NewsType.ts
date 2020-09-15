@@ -4,11 +4,11 @@ import Boom from "@hapi/boom";
 
 import { Controller, Flow, Get, Post, Put, Delete, Ctx, Params, Body } from "koa-ts-controllers";
 
-import { NewsType as NewsTypeModel } from "../models/NewsType";
+import { NewsType as NewsTypeModel } from "../../models/news/NewsType";
 
-import authen from "../middleware/Authentication";
+import authen from "../../middleware/Authentication";
 
-import { PostAddNewsType } from "../validators/NewsType";
+import { PostAddNewsType } from "../../validators/news/NewsType";
 
 
 @Flow([authen])  // 该控制器下面的所有API都需要鉴权

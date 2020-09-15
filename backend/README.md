@@ -275,7 +275,7 @@
         "db:create": "sequelize db:create",                                             // 创建数据库
         "db:drop": "sequelize db:drop",                                                 // 销毁数据库,
 
-        "db:migrate": "sequelize db:migrate",                                           // 创建表
+        "db:migrate": "sequelize db:migrate",                                           // 创建表  npm run db:migrate
         "db:migrate:undo:all": "sequelize db:migrate:undo:all",                         // 撤销所有创建
 
         "db:seed:all": "sequelize db:seed:all",                                         // 执行种子脚本（把数据写入数据库）
@@ -426,6 +426,12 @@
             return queryInterface.removeColumn('user', 'id_card');
         }
     };
+```
+
+(3)、执行表创建
+
+```shell
+npm run db:migrate
 ```
 
 

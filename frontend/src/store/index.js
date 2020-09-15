@@ -9,6 +9,7 @@ import news from "./modules/news";
 
 export default new Vuex.Store({
   state: {
+    // 配置后端域名
     server: {
       staticHost: process.env.VUE_APP_SERVER_STATIC_HOST
     }
@@ -20,9 +21,10 @@ export default new Vuex.Store({
   actions: {
 
   },
+  // 拆分模块
   modules: {
 
-    // 拆分模块
+    // 用户模块
     user,
 
     // 新闻模块

@@ -38,7 +38,10 @@
 
             <Col span="11" offset="1">
               <div class="cover-box">
-                <img v-if="formValidate.cover" :src="this.$store.state.server.staticHost + formValidate.cover" />
+                <img
+                  v-if="formValidate.cover"
+                  :src="this.$store.state.server.staticHost + formValidate.cover"
+                />
                 <img v-else src="../assets/default.png" />
               </div>
             </Col>
@@ -217,6 +220,8 @@ export default {
       this.$store.dispatch("news/getType");
     }
 
+    console.log('挂载在window对象上的全局属性测试：', window.mupiao);
+    
     this.editor = new wangEditor("#content");
     const config = this.editor.customConfig;
 
@@ -259,7 +264,7 @@ export default {
               .then(res => {
                 if (204 == res.status) {
                   this.$Message.success("新闻发布成功!");
-                  window.location.href = '/';
+                  window.location.href = "/";
                 }
               });
           } catch (err) {

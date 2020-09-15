@@ -18,7 +18,7 @@ const config: any = {
     development: {
         server: {
             host: "localhost",
-            prot: 8080
+            prot: 3000
         },
         database: dbconfig.development as DbConfigType,  //由于dbconfig是一个json格式没有类型，所以在这里用接口业做中转换，不然在app.ts中的 new Sequelize(Config.database) 会报错
         jwt: {
@@ -32,7 +32,7 @@ const config: any = {
     test: {
         server: {
             host: "localhost",
-            prot: 8086
+            prot: 3000
         },
         database: dbconfig.test as DbConfigType,
         jwt: {
@@ -42,7 +42,7 @@ const config: any = {
     production: {
         server: {
             host: "localhost",
-            prot: 3306
+            prot: 3000
         },
         database: dbconfig.production as DbConfigType,
         jwt: {

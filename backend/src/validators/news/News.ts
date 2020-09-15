@@ -22,8 +22,8 @@ export class PostAddNews extends PublicAttr {
     @IsNotEmpty({
         message: '新闻类型id不能为空！'
     })
-    typeId: number;  
-    
+    typeId: number;
+
     @IsNotEmpty({
         message: '新闻名称不能为空！'
     })

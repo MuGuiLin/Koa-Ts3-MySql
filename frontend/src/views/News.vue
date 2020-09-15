@@ -40,17 +40,19 @@ export default {
   },
 
   computed: {
-    ...mapState('news', ['newsType', 'newsArr']),
+    ...mapState("news", ["newsType", "newsArr"]),
 
     // 起别名
     ...mapState("news", {
       list: state => state.newsArr,
-      type: o  => o.newsType
+      type: o => o.newsType
     })
   },
+
+
   mounted() {
-    console.log('和store中的名字一样',this.newsType,  this.newsArr);
-    console.log('起别名', this.type,  this.list);
+    console.log("和store中的名字一样", this.newsType, this.newsArr);
+    console.log("起别名", this.type, this.list);
     if (!this.list) {
       this.$store.dispatch("news/getAll");
     }

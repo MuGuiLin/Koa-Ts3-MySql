@@ -25,14 +25,16 @@ axios.interceptors.request.use((req) => {
 // axios 响应拦截器
 axios.interceptors.response.use((res) => {
     return res;
+
 }, (err) => {
     // console.dir(err.response);
 
     const { message, errorDetails = '' } = err.response.data;
-    console.error(message + errorDetails);
+    console.debug('message: ' + message);
+    console.debug('errorDetails: ' + errorDetails);
 
     throw err; // 抛出错误
-    // return err;
+    return err;
 });
 
 // 用户注册API
@@ -90,6 +92,32 @@ export const addNews = (data) => {
     return axios({
         method: 'POST',
         url: '/news/add',
+        data
+    });
+};
+
+// 获取单个评论
+export const getOneComment = () => {
+    return axios({
+        method: 'GET',
+        url: '/comment/getOne'
+    });
+};
+
+
+// 获取所有评论
+export const getAllComment = () => {
+    return axios({
+        method: 'GET',
+        url: '/comment/getAll'
+    });
+};
+
+// 新增评论
+export const addComment = (data) => {
+    return axios({
+        method: 'POST',
+        url: '/comment/add',
         data
     });
 };
