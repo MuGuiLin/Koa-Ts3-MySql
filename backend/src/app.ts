@@ -24,7 +24,7 @@ import Config from './config'
     const db = new Sequelize({
         ...Config.database,
         models: [
-            __dirname + '/models/**/*.ts' //注models目录中不要出现index.ts（如：user/index.ts）不然会找不到！！要（要：user/User.ts）[而且文件名首字母大写，因为目录名和文件名不可相同]才行！！
+            __dirname + '/models/**/*.ts' // 注models目录中不要出现index.ts（如：user/index.ts）不然会找不到！！要（要：user/User.ts）[而且文件名首字母大写，因为目录名和文件名不可相同]才行！！
         ]
     });
     // console.log(db);
@@ -39,7 +39,8 @@ import Config from './config'
 
         if (token) {
             // 将传过来的参数挂载到ctx下，jwt.verify(token, Config.jwt.verifyKey) 校验在login接口中设置的 jwt.sign(userInfo, Config.jwt.verifyKey) 是否相等;
-            ctx.userInfo = jwt.verify(token, Config.jwt.verifyKey) as UserInfo;   // UserInfo是自定义挂载到koa中的一个对象（属性）
+            // ctx.userInfo = jwt.verify(token, Config.jwt.verifyKey) as UserInfo;   // UserInfo是自定义挂载到koa中的一个对象（属性）
+            ctx.userInfo = jwt.verify(token, Config.jwt.verifyKey);   // UserInfo是自定义挂载到koa中的一个对象（属性）
 
         };
         await next();
@@ -55,7 +56,7 @@ import Config from './config'
         router: Router,                                         // 绑定路由模块 
         basePath: '/api',                                       // 访问规则 localhost:8080/api/v2/控制器/接口
         versions: {                                             // 版本号 
-            1: '此版本已弃用，不久将被删除！请尽快迁移到v2版本', // 可以同时开多个版本，这个是虽然能用，但是有警告信息
+            1: '此版本已弃用，不久将被删除！请尽快迁移到v2版本',    // 可以同时开多个版本，这个是虽然能用，但是有警告信息
             2: true,                                            // 正常访问
             dangote: true                                       // 非常适合定制，业务客户端特定的端点版本
         },
@@ -105,7 +106,7 @@ import Config from './config'
             uploadDir: Config.storage.dir,  // 文件上传目录,默认os.tmpDir(),
             keepExtensions: true,           // 开启文件写入uploadDir包括原始文件的扩展名, 默认false
             hash: 'md5',                    // 如果你想计算校验和传入的文件, 设置这个要么'sha1'或'md5'、默认false
-            multiples: true,                 // 开启多文件上传
+            multiples: true,                // 开启多文件上传
             onFileBegin: (name?: any, file?: any) => {
                 // console.log(name, file);
             }
